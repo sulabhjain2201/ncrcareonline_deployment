@@ -26,7 +26,7 @@ jobs:
         with:
           repository: 'sulabhjain2201/ncrcareonline_deployment'
           ref: 'main'
-          token: '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'
+          token: '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'
 
       - name: Azure Login
         uses: azure/login@v1
