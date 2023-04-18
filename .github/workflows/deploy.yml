@@ -8,6 +8,9 @@ on:
       folder_name:
         type: string
         required: true 
+      ssl_enabled:
+        type: string
+        required: true 
   workflow_call:
     inputs:
       domain_name:
@@ -38,4 +41,4 @@ jobs:
           azcliversion: 2.47.0
           inlineScript: |
             chmod +x $GITHUB_WORKSPACE/create_vm.sh
-            $GITHUB_WORKSPACE/create_vm.sh
+            $GITHUB_WORKSPACE/create_vm.sh ${{ inputs.domain_name }} ${{ inputs.folder_name }} ${{ inputs.ssl_enabled }}
