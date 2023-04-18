@@ -23,6 +23,9 @@ git clone $GIT_REPO_URL
 
 export IP_ADDRESS=$(az vm show --show-details --resource-group $RESOURCE_GROUP_NAME --name $VM_NAME --query publicIps --output tsv)
 
+ssh-keygen -R $IP_ADDRESS
+
+ssh -o "StrictHostKeyChecking accept-new" $ADMIN_USERNAME@$IP_ADDRESS
 
 
 scp -r -i ncrvcr_key.pem $FOLDER_NAME/*  azureuser@$IP_ADDRESS:/var/www/html
