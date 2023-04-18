@@ -1,0 +1,123 @@
+1. create private key and CSR
+openssl req -newkey rsa:2048 -keyout ncrcareonline.key -out ncrcareonline.csr
+password: ncrcareonline
+
+2. scp to remote from local
+scp -r -i ncrvcr_key.pem ssl_key_for_ncrvcr/teleurgecare.com/*  azureuser@4.246.225.5:/etc/apache2/ssl
+
+
+3. sudo cp -a . /var/www/html/
+
+4. 
+ssh -i ncrvcr_key.pem azureuser@20.51.189.110
+
+ssh -i ncrvcr_key.pem azureuser@20.228.244.238
+
+20.228.244.238
+
+
+## Start command ##
+sudo systemctl start apache2.service
+## Stop command ##
+sudo systemctl stop apache2.service
+## Restart command ##
+sudo systemctl restart apache2.service
+
+
+sudo systemctl status apache2.service
+
+
+bitbucket pass:
+ATBB83Xy7LBHmKbBxuNv4bzsvEN2FA48D8C4
+
+
+Godaddy
+api_key = A4r4jH86KGE_9NfjFjmyiRNR48TYN8uKr5
+secret = JZCjxA1dtygHEM7iH7NQv8
+
+
+export RESOURCE_GROUP_NAME=ncrcareonline
+export LOCATION=eastus
+export VM_NAME=noonrjoonr.com
+export VM_IMAGE=ncrvcr-image-20230408170353
+export ADMIN_USERNAME=azureuser
+export SECURITY_GROUP=ncrcareonlineSecurityGroup
+export SECURITY_RULE_SSH=ncrcareonlineSecurityRuleSsh
+export SECURITY_RULE_HTTP=ncrcareonlineSecurityRuleHttp
+export SECURITY_RULE_HTTPS=ncrcareonlineSecurityRuleHttps
+export GIT_REPO_URL=https://ncrzpr@bitbucket.org/ncrzpr/ncrcarecard.git
+export FOLDER_NAME=noonrjoonr
+
+az network nsg create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $SECURITY_GROUP
+
+az network nsg rule create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --nsg-name $SECURITY_GROUP \
+    --name $SECURITY_RULE_SSH \
+    --protocol tcp \
+    --priority 1000 \
+    --destination-port-range 22 \
+    --access allow
+
+az network nsg rule create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --nsg-name $SECURITY_GROUP \
+    --name $SECURITY_RULE_HTTP \
+    --protocol tcp \
+    --priority 1001 \
+    --destination-port-range 80 \
+    --access allow
+
+az network nsg rule create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --nsg-name $SECURITY_GROUP \
+    --name $SECURITY_RULE_HTTPS \
+    --protocol tcp \
+    --priority 1002 \
+    --destination-port-range 443 \
+    --access allow
+
+
+
+az vm create \
+  --resource-group $RESOURCE_GROUP_NAME \
+  --name $VM_NAME \
+  --image $VM_IMAGE \
+  --nsg $SECURITY_GROUP \
+  --size Standard_B1s \
+  --admin-username $ADMIN_USERNAME \
+  --ssh-key-values public_key.pub \
+  --public-ip-sku Standard
+
+
+export IP_ADDRESS=$(az vm show --show-details --resource-group $RESOURCE_GROUP_NAME --name $VM_NAME --query publicIps --output tsv)
+
+az vm run-command invoke -g $RESOURCE_GROUP_NAME -n $VM_NAME --command-id RunShellScript --scripts "rm -rf /var/www/html/*"
+
+
+git clone $GIT_REPO_URL
+
+scp -r -i ncrvcr_key.pem $FOLDER_NAME/*  azureuser@4.246.225.5:/var/www/html
+
+az vm run-command invoke -g $RESOURCE_GROUP_NAME -n $VM_NAME --command-id RunShellScript --scripts "sudo systemctl restart apache2.service"
+
+
+<VirtualHost *:443>
+ServerName ncrvcr.com
+DocumentRoot /var/www/html
+
+
+SSLEngine on
+SSLCertificateFile /etc/apache2/ssl/f996c1fe92d88537.crt
+SSLCertificateKeyFile /etc/apache2/ssl/ncrcareonline.key
+SSLCertificateChainFile /etc/apache2/ssl/gd_bundle-g2-g1.crt
+</VirtualHost>
+
+
+curl -X PUT "https://api.godaddy.com/v1/domains/$VM_NAME/records/A/@" \
+-H "accept: application/json" \
+-H "Content-Type: application/json" \
+-H "$headers" \
+-d "[ { \"data\": \"$IP_ADDRESS\", \"port\": 1, \"priority\": 0, \"protocol\": \"string\", \"service\": \"string\", \"ttl\":\"3600\"}]

@@ -1,0 +1,43 @@
+name: create_vm 
+on:
+  workflow_dispatch:
+    inputs:
+      domain_name:
+        type: string
+        required: true 
+      folder_name:
+        type: string
+        required: true 
+  workflow_call:
+    inputs:
+      domain_name:
+        type: string
+        required: true
+      folder_name:
+        type: string
+        required: true
+
+jobs:
+  create_vm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: 'sulabhjain2201/ncrcareonline_deployment'
+          ref: 'main'
+          token: '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'
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+
+      - name: Azure CLI script file
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.47.0
+          inlineScript: |
+            chmod +x $GITHUB_WORKSPACE/create_vm.sh
+            $GITHUB_WORKSPACE/create_vm.sh
