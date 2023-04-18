@@ -22,11 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          repository: 'sulabhjain2201/ncrcareonline_deployment'
-          ref: 'main'
-          token: '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'
+          fetch-depth: 0
 
       - name: Azure Login
         uses: azure/login@v1
