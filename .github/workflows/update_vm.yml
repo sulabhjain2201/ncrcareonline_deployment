@@ -19,7 +19,7 @@ on:
         required: true
 
 jobs:
-  create_vm:
+  update_vm:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
