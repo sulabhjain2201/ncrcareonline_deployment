@@ -7,17 +7,24 @@ export displayName=$1
 
 export userPrincipalName=$2
 
-export passwordProfile=$3
+groupName="varrion_developer"
+
+generatedPassword=$(openssl rand -base64 12)
 
 
 
-az ad user create \
+userId=$(az ad user create \
   --display-name "$displayName" \
   --user-principal-name "$userPrincipalName" \
-  --password "$passwordProfile" \
-  --force-change-password-next-login true
+  --password "$generatedPassword" \
+  --force-change-password-next-login true \
+  --query objectId \
+  --output tsv)
 
-# Output success message
-echo "User created successfully."
+echo "User created successfully with User ID: $userId and auto-generated password: $generatedPassword"
+
+az ad group member add --group "$groupName" --member-id $userId
+
+
 
 
