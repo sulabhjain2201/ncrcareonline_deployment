@@ -8,9 +8,6 @@ on:
       email_address:
         type: string
         required: true 
-      password:
-        type: string
-        required: true 
   workflow_call:
     inputs:
       display_name:
@@ -19,9 +16,6 @@ on:
       email_address:
         type: string
         required: true
-      password:
-        type: string
-        required: true 
 jobs:
   create_user:
     runs-on: ubuntu-latest
@@ -43,4 +37,4 @@ jobs:
           azcliversion: 2.47.0
           inlineScript: |
             chmod +x $GITHUB_WORKSPACE/create_user.sh
-            $GITHUB_WORKSPACE/create_user.sh ${{ inputs.display_name }} ${{ inputs.email_address }} ${{ inputs.password }}
+            $GITHUB_WORKSPACE/create_user.sh ${{ inputs.display_name }} ${{ inputs.email_address }}
