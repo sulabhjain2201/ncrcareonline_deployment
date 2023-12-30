@@ -43,4 +43,4 @@ jobs:
           azcliversion: 2.47.0
           inlineScript: |
             chmod +x $GITHUB_WORKSPACE/create_user.sh
-            $GITHUB_WORKSPACE/create_vm.sh ${{ inputs.display_name }} ${{ inputs.email_address }} ${{ inputs.password }}
+            $GITHUB_WORKSPACE/create_user.sh ${{ inputs.display_name }} ${{ inputs.email_address }} ${{ inputs.password }}
