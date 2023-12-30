@@ -1,1 +1,46 @@
+name: create_vm 
+on:
+  workflow_dispatch:
+    inputs:
+      display_name:
+        type: string
+        required: true 
+      email_address:
+        type: string
+        required: true 
+      password:
+        type: string
+        required: true 
+  workflow_call:
+    inputs:
+      display_name:
+        type: string
+        required: true
+      email_address:
+        type: string
+        required: true
+      password:
+        type: string
+        required: true 
+jobs:
+  create_user:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+         creds: '${{ secrets.AZURE_CREDENTIALS }}'
+
+
+      - name: Azure CLI script file
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.47.0
+          inlineScript: |
+            chmod +x $GITHUB_WORKSPACE/create_user.sh
+            $GITHUB_WORKSPACE/create_vm.sh ${{ inputs.display_name }} ${{ inputs.email_address }} ${{ inputs.password }}
