@@ -1,4 +1,4 @@
-name: create_vm 
+name: create_user 
 on:
   workflow_dispatch:
     inputs:
