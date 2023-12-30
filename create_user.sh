@@ -17,7 +17,6 @@ userId=$(az ad user create \
   --display-name "$displayName" \
   --user-principal-name "$userPrincipalName" \
   --password "$generatedPassword" \
-  --force-change-password-next-login true \
   --query objectId \
   --output tsv)
 
