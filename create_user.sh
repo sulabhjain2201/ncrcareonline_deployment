@@ -17,7 +17,7 @@ userId=$(az ad user create \
   --display-name "$displayName" \
   --user-principal-name "$userPrincipalName" \
   --password "$generatedPassword" \
-  --query objectId \
+  --query id \
   --output tsv)
 
 echo "User created successfully with User ID: $userId and auto-generated password: $generatedPassword"
