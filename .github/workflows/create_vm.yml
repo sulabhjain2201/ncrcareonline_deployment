@@ -37,4 +37,10 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
 
-
+      - name: Azure CLI script file
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.47.0
+          inlineScript: |
+            chmod +x $GITHUB_WORKSPACE/create_vm.sh
+            $GITHUB_WORKSPACE/create_vm.sh ${{ inputs.domain_name }} ${{ inputs.folder_name }} ${{ inputs.ssl_enabled }}
